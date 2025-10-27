@@ -1,17 +1,19 @@
 FROM registry.gitlab.com/crafty-controller/crafty-4:latest
 
+# Timezone
 ENV TZ=Etc/UTC
 EXPOSE 8000
 
-# Prepare unified data folder and symlinks
-RUN mkdir -p /crafty_data/{backups,logs,servers,config,import} && \
-    mkdir -p /crafty/app/config && \
-    ln -sf /crafty_data/backups /crafty/backups && \
-    ln -sf /crafty_data/logs /crafty/logs && \
-    ln -sf /crafty_data/servers /crafty/servers && \
-    ln -sf /crafty_data/config /crafty/app/config && \
-    ln -sf /crafty_data/import /crafty/import && \
-    chown -R 1000:1000 /crafty /crafty_data
+# Create unified volume path with correct ownership
+RUN mkdir -p /crafty_data/{backups,logs,servers,config,import} \
+    && chown -R 1000:1000 /crafty_data /crafty
 
-# Run as Crafty's internal user
+# Set Crafty data paths to /crafty_data subfolders
+ENV CRAFTY_BACKUPS_DIR=/crafty_data/backups
+ENV CRAFTY_LOGS_DIR=/crafty_data/logs
+ENV CRAFTY_SERVERS_DIR=/crafty_data/servers
+ENV CRAFTY_CONFIG_DIR=/crafty_data/config
+ENV CRAFTY_IMPORT_DIR=/crafty_data/import
+
+# Use Crafty's internal non-root user
 USER 1000
