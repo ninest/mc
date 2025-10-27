@@ -1,0 +1,13 @@
+[build]
+builder = "dockerfile"
+dockerfilePath = "./Dockerfile"
+
+[deploy]
+startCommand = "python3 /crafty/main.py"
+
+[volumes]
+crafty_data = "/crafty_data"
+
+[env]
+TZ = "Etc/UTC"
+CRAFTY_WEB_USE_SSL = "false"
