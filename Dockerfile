@@ -3,15 +3,13 @@ FROM registry.gitlab.com/crafty-controller/crafty-4:latest
 # Set timezone
 ENV TZ=Etc/UTC
 
-# Use root for setup
 USER root
 
-# Update packages and ensure pip works with system packages
+# Install pip and required Python packages (no pip upgrade)
 RUN apt-get update && apt-get install -y python3-pip && \
-    pip install --break-system-packages --upgrade pip && \
     pip install --break-system-packages peewee flask flask_socketio requests cryptography gevent tzdata
 
-# Expose Crafty’s web port (Railway will map it)
+# Expose Crafty web port
 ENV CRAFTY_WEB_USE_SSL=false
 ENV CRAFTY_WEB_PORT=${PORT}
 EXPOSE 8000
@@ -27,8 +25,7 @@ ENV CRAFTY_SERVERS_DIR=/crafty_data/servers
 ENV CRAFTY_CONFIG_DIR=/crafty_data/config
 ENV CRAFTY_IMPORT_DIR=/crafty_data/import
 
-# Drop privileges back to Crafty’s user
 USER 1000
 
-# Start Crafty
+# Default command to launch Crafty
 CMD ["python3", "/crafty/main.py"]
