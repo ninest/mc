@@ -1,0 +1,7 @@
+peewee
+flask
+flask_socketio
+requests
+cryptography
+gevent
+tzdata
